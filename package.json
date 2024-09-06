@@ -3,6 +3,11 @@
   "packageManager": "yarn@4.4.0",
   "version": "0.0.0",
   "type": "module",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "types": "./types/hooks.d.ts",
   "main": "./dist/hooks.umd.cjs",
   "module": "./dist/hooks.js",
   "exports": {
@@ -31,7 +36,8 @@
     "eslint": "^8.57.0",
     "prettier": "^3.3.3",
     "typescript": "^5.2.2",
-    "vite": "^5.3.4"
+    "vite": "^5.3.4",
+    "vite-plugin-dts": "^4.1.0"
   },
   "peerDependencies": {
     "react": "^18.3.1",
