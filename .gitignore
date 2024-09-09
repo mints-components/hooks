@@ -25,6 +25,7 @@ dist
 dist-ssr
 types
 *.local
+coverage
 
 # Editor directories and files
 .vscode/*
