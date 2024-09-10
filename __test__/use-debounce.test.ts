@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 
 import { useDebounce } from '../src';
 
-import { sleep } from './help';
+jest.useFakeTimers();
 
 describe('useDebounce', () => {
   it('useDebounce wait:200ms', async () => {
@@ -14,23 +14,29 @@ describe('useDebounce', () => {
 
     mountedState = 1;
     rerender();
-    await sleep(50);
+    await act(async () => {
+      jest.advanceTimersByTime(50);
+    });
     expect(result.current).toBe(0);
 
     mountedState = 2;
     rerender();
-    await sleep(100);
+    await act(async () => {
+      jest.advanceTimersByTime(100);
+    });
     expect(result.current).toBe(0);
 
     mountedState = 3;
     rerender();
-    await sleep(150);
+    await act(async () => {
+      jest.advanceTimersByTime(150);
+    });
     expect(result.current).toBe(0);
 
     mountedState = 4;
     rerender();
     await act(async () => {
-      await sleep(250);
+      jest.advanceTimersByTime(200);
     });
     expect(result.current).toBe(4);
   });
