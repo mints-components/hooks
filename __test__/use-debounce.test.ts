@@ -14,23 +14,17 @@ describe('useDebounce', () => {
 
     mountedState = 1;
     rerender();
-    await act(async () => {
-      jest.advanceTimersByTime(50);
-    });
+    jest.advanceTimersByTime(50);
     expect(result.current).toBe(0);
 
     mountedState = 2;
     rerender();
-    await act(async () => {
-      jest.advanceTimersByTime(100);
-    });
+    jest.advanceTimersByTime(100);
     expect(result.current).toBe(0);
 
     mountedState = 3;
     rerender();
-    await act(async () => {
-      jest.advanceTimersByTime(150);
-    });
+    jest.advanceTimersByTime(150);
     expect(result.current).toBe(0);
 
     mountedState = 4;
