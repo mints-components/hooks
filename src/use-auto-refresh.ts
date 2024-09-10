@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 export const useAutoRefresh = <T>(
   request: () => Promise<T>,
@@ -23,29 +23,7 @@ export const useAutoRefresh = <T>(
     retryCount: -1,
   });
 
-  useEffect(() => {
-    return () => {
-      clearTimeout(ref.current.timer);
-      ref.current.abortController?.abort();
-    };
-  }, []);
-
-  if (
-    stop?.(ref.current.data) ||
-    (retryLimit && retryLimit <= ref.current.retryCount)
-  ) {
-    return {
-      loading: false,
-      data: ref.current.data,
-      error: ref.current.error,
-      stoped: true,
-    };
-  }
-
-  clearTimeout(ref.current.timer);
-  ref.current.abortController?.abort();
-
-  ref.current.timer = setTimeout(() => {
+  const _request = useCallback(() => {
     ref.current.state = 'loading';
     ref.current.abortController = new AbortController();
     request()
@@ -61,7 +39,33 @@ export const useAutoRefresh = <T>(
         ref.current.retryCount += 1;
         setVersion((v) => v + 1);
       });
-  }, interval);
+  }, [request]);
+
+  useEffect(() => {
+    _request();
+    return () => {
+      clearTimeout(ref.current.timer);
+      ref.current.abortController?.abort();
+    };
+  }, []);
+
+  if (
+    stop?.(ref.current.data) ||
+    (retryLimit && retryLimit <= ref.current.retryCount)
+  ) {
+    clearTimeout(ref.current.timer);
+    return {
+      loading: false,
+      data: ref.current.data,
+      error: ref.current.error,
+      stoped: true,
+    };
+  }
+
+  clearTimeout(ref.current.timer);
+  ref.current.abortController?.abort();
+
+  ref.current.timer = setTimeout(() => _request(), interval);
 
   return {
     loading: ref.current.state === 'loading',

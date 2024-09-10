@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 
 import { useAutoRefresh } from '../src';
 
@@ -8,6 +8,8 @@ jest.useFakeTimers();
 
 describe('useAutoRefresh', () => {
   it('should return the initial values for data, loading, error, stoped', async () => {
+    request.mockImplementation(() => new Promise(() => {}));
+
     const { result } = renderHook(() => useAutoRefresh(request));
 
     expect(result.current).toEqual({
@@ -21,7 +23,6 @@ describe('useAutoRefresh', () => {
 
     const { result, rerender } = renderHook(() => useAutoRefresh(request));
 
-    jest.advanceTimersByTime(5000);
     rerender();
     expect(result.current).toEqual({
       loading: true,
@@ -32,11 +33,7 @@ describe('useAutoRefresh', () => {
   it('should return the data after the request is resolved', async () => {
     request.mockResolvedValueOnce('data');
 
-    const { result } = renderHook(() =>
-      useAutoRefresh(request, { retryLimit: 1 }),
-    );
-
-    jest.advanceTimersByTime(5000);
+    const { result } = renderHook(() => useAutoRefresh(request));
 
     await waitFor(() => {
       expect(result.current).toEqual({
@@ -54,7 +51,6 @@ describe('useAutoRefresh', () => {
       useAutoRefresh(request, { retryLimit: 1 }),
     );
 
-    jest.advanceTimersByTime(5000);
     await waitFor(() => {
       expect(result.current).toEqual({
         loading: false,
@@ -80,7 +76,6 @@ describe('useAutoRefresh', () => {
       useAutoRefresh(request, { stop: (data) => data === 'data' }),
     );
 
-    jest.advanceTimersByTime(5000);
     await waitFor(() => {
       expect(result.current).toEqual({
         loading: false,
@@ -89,7 +84,10 @@ describe('useAutoRefresh', () => {
       });
     });
 
-    jest.advanceTimersByTime(5000);
+    await act(async () => {
+      jest.advanceTimersByTime(5000);
+    });
+
     await waitFor(() => {
       expect(result.current).toEqual({
         loading: false,
