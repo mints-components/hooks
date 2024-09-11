@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 
 export const useAutoRefresh = <T>(
-  request: () => Promise<T>,
+  request: (signal: AbortSignal) => Promise<T>,
   option?: {
     stop?: (data?: T) => boolean;
     interval?: number;
@@ -26,7 +26,7 @@ export const useAutoRefresh = <T>(
   const _request = useCallback(() => {
     ref.current.state = 'loading';
     ref.current.abortController = new AbortController();
-    request()
+    request(ref.current.abortController.signal)
       .then((data: T) => {
         ref.current.data = data;
         ref.current.state = 'polling';
@@ -54,6 +54,7 @@ export const useAutoRefresh = <T>(
     (retryLimit && retryLimit <= ref.current.retryCount)
   ) {
     clearTimeout(ref.current.timer);
+    ref.current.abortController?.abort();
     return {
       loading: false,
       data: ref.current.data,
