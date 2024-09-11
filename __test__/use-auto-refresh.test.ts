@@ -44,6 +44,20 @@ describe('useAutoRefresh', () => {
     });
   });
 
+  it('should return the error after the request is rejected', async () => {
+    request.mockRejectedValueOnce('error');
+
+    const { result } = renderHook(() => useAutoRefresh(request));
+
+    await waitFor(() => {
+      expect(result.current).toEqual({
+        loading: false,
+        error: 'error',
+        stoped: false,
+      });
+    });
+  });
+
   it('should return the stoped state after the retry limit is reached', async () => {
     request.mockResolvedValue('data');
 
@@ -95,5 +109,16 @@ describe('useAutoRefresh', () => {
         stoped: true,
       });
     });
+  });
+
+  it('should abort the fetch request on unmount', () => {
+    request.mockResolvedValue('data');
+    const mockAbort = jest.spyOn(AbortController.prototype, 'abort');
+
+    const { rerender, unmount } = renderHook(() => useAutoRefresh(request));
+    rerender();
+    unmount();
+
+    expect(mockAbort).toHaveBeenCalled();
   });
 });
