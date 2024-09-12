@@ -1,0 +1,23 @@
+on: ['push', 'pull_request']
+
+name: Test Coveralls
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'yarn'
+          cache-dependency-path: ./yarn.lock
+
+      - run: yarn install
+      - run: yarn test --coverage
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
