@@ -3,6 +3,7 @@
 <div align="center">
 
 [![NPM version](https://img.shields.io/npm/v/%40mints%2Fhooks?style=flat-square)](https://www.npmjs.com/package/@mints/hooks)
+[![Coverage Status](https://coveralls.io/repos/github/mints-components/hooks/badge.svg?style=flat-square)](https://coveralls.io/github/mints-components/hooks)
 [![GitHub issues](https://img.shields.io/github/issues/mints-components/hooks?style=flat-square)](https://github.com/mints-components/hooks/issues)
 ![LICENCE](https://img.shields.io/github/license/mints-components/hooks?style=flat-square)
 
