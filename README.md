@@ -18,7 +18,7 @@
 - Written in typescript to achieve good type support.
 - Constantly add new and useful hooks.
 
-## 🌈 Install
+## 🌈 Installation
 
 ```
 $ npm install @mints/hooks
@@ -32,7 +32,11 @@ import { useRequest } from '@mints/hooks';
 
 ## 📃 Hook List
 
-- useRequest
-- useAutoRefresh
-- useOutsideClick
-- useDebounce
+- [useRequest](./docs/use-request.md)
+- [useAutoRefresh](./docs/use-auto-refresh.md)
+- [useOutsideClick](./docs/use-outside-click.md)
+- [useDebounce](./docs/use-debounce.md)
+
+## 🌐 LICENSE
+
+[MIT](./LICENSE)
