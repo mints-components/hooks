@@ -1,6 +1,18 @@
-on: ['push', 'pull_request']
-
 name: Test Coveralls
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'test/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'test/**'
 
 jobs:
   build:
