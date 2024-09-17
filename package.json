@@ -1,15 +1,19 @@
 {
   "name": "@mints/hooks",
-  "packageManager": "yarn@4.5.0",
   "version": "1.0.0",
-  "description": "An easy-to-use React hooks collections.",
   "keywords": [
     "react",
     "hooks",
     "mints",
     "mints-components"
   ],
-  "repository": "git@github.com:mints-components/hooks.git",
+  "description": "An easy-to-use React hooks collections.",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mints-components/hooks.git"
+  },
+  "license": "MIT",
+  "packageManager": "yarn@4.5.0",
   "type": "module",
   "files": [
     "dist",
