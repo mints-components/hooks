@@ -9,6 +9,7 @@
     "mints",
     "mints-components"
   ],
+  "repository": "git@github.com:mints-components/hooks.git",
   "type": "module",
   "files": [
     "dist",
