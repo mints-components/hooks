@@ -36,6 +36,7 @@ import { useRequest } from '@mints/hooks';
 - [useAutoRefresh](./docs/use-auto-refresh.md)
 - [useOutsideClick](./docs/use-outside-click.md)
 - [useDebounce](./docs/use-debounce.md)
+- [useToggle](./docs/use-toggle.md)
 
 ## 🌐 LICENSE
 
