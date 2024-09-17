@@ -10,7 +10,7 @@
   "description": "An easy-to-use React hooks collections.",
   "repository": {
     "type": "git",
-    "url": "git@github.com:mints-components/hooks.git"
+    "url": "git+https://github.com/mints-components/hooks.git"
   },
   "license": "MIT",
   "packageManager": "yarn@4.5.0",
