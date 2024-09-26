@@ -37,6 +37,7 @@ import { useRequest } from '@mints/hooks';
 - [useOutsideClick](./docs/use-outside-click.md)
 - [useDebounce](./docs/use-debounce.md)
 - [useToggle](./docs/use-toggle.md)
+- [useLocalStorage](./docs/use-localstorage.md)
 
 ## 🌐 LICENSE
 
