@@ -17,12 +17,14 @@ export const useRequest = <T>(
   });
 
   useEffect(() => {
+    // Cleanup on unmount
     return () => {
       ref.current.abortController?.abort();
     };
   }, []);
 
   if (isEqualWith(ref.current.deps, deps)) {
+    // If dependencies haven't changed, return cached state
     return {
       data: ref.current.data,
       loading: ref.current.state === 'loading',
@@ -30,25 +32,31 @@ export const useRequest = <T>(
     };
   }
 
+  // Cancel previous request
   ref.current.abortController?.abort();
 
+  // Update the dependencies and state
   ref.current.deps = deps;
   ref.current.state = 'loading';
   const abortController = new AbortController();
   ref.current.abortController = abortController;
 
+  // Make the request
   request(abortController.signal)
     .then((data: T) => {
+      // Only update if the request hasn't been aborted
       if (abortController.signal.aborted) return;
       ref.current.data = data;
       ref.current.state = 'done';
     })
     .catch((err: unknown) => {
+      // Only update if the request hasn't been aborted
       if (abortController.signal.aborted) return;
       ref.current.error = err;
       ref.current.state = 'error';
     })
     .finally(() => {
+      // Trigger a re-render to reflect the state changes
       setVersion((v) => v + 1);
     });
 
