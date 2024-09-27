@@ -11,24 +11,6 @@ describe('useRequest', () => {
     const { result } = renderHook(() => useRequest(request));
 
     expect(result.current).toEqual({
-      loading: false,
-    });
-  });
-
-  it('should return the loading state when the request is pending', async () => {
-    request.mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve('data'), 1000)),
-    );
-
-    const { result, rerender } = renderHook(() => useRequest(request));
-
-    expect(result.current).toEqual({
-      loading: false,
-    });
-
-    jest.advanceTimersByTime(500);
-    rerender();
-    expect(result.current).toEqual({
       loading: true,
     });
   });
@@ -61,6 +43,7 @@ describe('useRequest', () => {
   });
 
   it('should abort the fetch request on unmount', () => {
+    request.mockResolvedValueOnce('data');
     const mockAbort = jest.spyOn(AbortController.prototype, 'abort');
 
     const { unmount } = renderHook(() => useRequest(request));

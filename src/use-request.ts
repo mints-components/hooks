@@ -7,14 +7,14 @@ export const useRequest = <T>(
 ) => {
   const [, setVersion] = useState(0);
   const ref = useRef<{
-    state: 'idle' | 'loading' | 'done' | 'error';
+    state: 'loading' | 'done' | 'error';
     data?: T;
     error?: unknown;
     deps?: React.DependencyList;
     abortController?: AbortController;
     timer?: number;
   }>({
-    state: 'idle',
+    state: 'loading',
   });
 
   useEffect(() => {
@@ -33,11 +33,11 @@ export const useRequest = <T>(
   }
 
   clearTimeout(ref.current.timer);
+  ref.current.state = 'loading';
   ref.current.deps = deps;
   ref.current.abortController?.abort();
 
   ref.current.timer = window.setTimeout(() => {
-    ref.current.state = 'loading';
     ref.current.abortController = new AbortController();
     request(ref.current.abortController.signal)
       .then((data: T) => {
