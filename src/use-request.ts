@@ -12,14 +12,12 @@ export const useRequest = <T>(
     error?: unknown;
     deps?: React.DependencyList;
     abortController?: AbortController;
-    timer?: number;
   }>({
     state: 'loading',
   });
 
   useEffect(() => {
     return () => {
-      clearTimeout(ref.current.timer);
       ref.current.abortController?.abort();
     };
   }, []);
@@ -32,26 +30,24 @@ export const useRequest = <T>(
     };
   }
 
-  clearTimeout(ref.current.timer);
-  ref.current.state = 'loading';
-  ref.current.deps = deps;
   ref.current.abortController?.abort();
 
-  ref.current.timer = window.setTimeout(() => {
-    ref.current.abortController = new AbortController();
-    request(ref.current.abortController.signal)
-      .then((data: T) => {
-        ref.current.data = data;
-        ref.current.state = 'done';
-      })
-      .catch((err: unknown) => {
-        ref.current.error = err;
-        ref.current.state = 'error';
-      })
-      .finally(() => {
-        setVersion((v) => v + 1);
-      });
-  }, 10);
+  ref.current.deps = deps;
+  ref.current.state = 'loading';
+  ref.current.abortController = new AbortController();
+
+  request(ref.current.abortController.signal)
+    .then((data: T) => {
+      ref.current.data = data;
+      ref.current.state = 'done';
+    })
+    .catch((err: unknown) => {
+      ref.current.error = err;
+      ref.current.state = 'error';
+    })
+    .finally(() => {
+      setVersion((v) => v + 1);
+    });
 
   return {
     loading: ref.current.state === 'loading',

@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 
 import { useRequest } from '../src';
 
@@ -8,10 +8,14 @@ jest.useFakeTimers();
 
 describe('useRequest', () => {
   it('should return the initial values for data, loading, error', async () => {
+    request.mockResolvedValueOnce('data');
+
     const { result } = renderHook(() => useRequest(request));
 
-    expect(result.current).toEqual({
-      loading: true,
+    await act(() => {
+      expect(result.current).toEqual({
+        loading: true,
+      });
     });
   });
 
@@ -47,8 +51,6 @@ describe('useRequest', () => {
     const mockAbort = jest.spyOn(AbortController.prototype, 'abort');
 
     const { unmount } = renderHook(() => useRequest(request));
-
-    jest.advanceTimersByTime(10);
     unmount();
 
     expect(mockAbort).toHaveBeenCalled();
