@@ -34,14 +34,17 @@ export const useRequest = <T>(
 
   ref.current.deps = deps;
   ref.current.state = 'loading';
-  ref.current.abortController = new AbortController();
+  const abortController = new AbortController();
+  ref.current.abortController = abortController;
 
-  request(ref.current.abortController.signal)
+  request(abortController.signal)
     .then((data: T) => {
+      if (abortController.signal.aborted) return;
       ref.current.data = data;
       ref.current.state = 'done';
     })
     .catch((err: unknown) => {
+      if (abortController.signal.aborted) return;
       ref.current.error = err;
       ref.current.state = 'error';
     })
