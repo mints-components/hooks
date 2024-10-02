@@ -8,7 +8,7 @@
 import { useSimulateProgress } from '@mints/hooks';
 
 const Example = () => {
-  const progress = useSimulateProgress(duration, () => {
+  const [progress, startProgress] = useSimulateProgress(duration, () => {
     console.log('Progress complete!');
   });
 
@@ -17,6 +17,7 @@ const Example = () => {
       className="progress-bar"
       style={{ width: '100%', background: '#e0e0e0', height: '30px' }}
     >
+      <div onClick={startProgress}>Start Progress</div>
       <div
         style={{
           width: `${progress}%`,
@@ -36,8 +37,10 @@ const Example = () => {
 ## API
 
 ```typescript
+type func = (...args: any[]) => void;
+
 useSimulateProgress = (
   duration: number,
-  onComplete: () => void,
-): number
+  onComplete: func,
+): [number, func]
 ```

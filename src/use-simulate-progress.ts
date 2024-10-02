@@ -1,25 +1,39 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+type func = (...args: any[]) => void;
 
 export const useSimulateProgress = (
   duration: number,
-  onComplete: () => void,
-) => {
+  onComplete: func,
+): [number, func] => {
   const [progress, setProgress] = useState(0);
+  const intervalRef = useRef<any>(null);
 
-  useEffect(() => {
+  const startProgress: func = (...args) => {
+    if (intervalRef.current) return;
+
     let progressValue = 0;
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       progressValue += 5;
       setProgress(progressValue);
 
       if (progressValue >= 100) {
-        clearInterval(interval);
-        onComplete();
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+        onComplete(...args);
       }
     }, duration / 20);
+  };
 
-    return () => clearInterval(interval);
-  }, [duration, onComplete]);
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
-  return progress;
+  return [progress, startProgress];
 };
+
+export default useSimulateProgress;
