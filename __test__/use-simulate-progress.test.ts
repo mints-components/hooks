@@ -57,6 +57,29 @@ describe('useSimulateProgress', () => {
     expect(mockCallback).toHaveBeenCalledTimes(1);
   });
 
+  it('resets progress to 0 when resetProgress is called', () => {
+    const mockOnComplete = jest.fn();
+    const { result } = renderHook(() =>
+      useSimulateProgress(1000, mockOnComplete),
+    );
+
+    act(() => {
+      result.current[1]();
+    });
+
+    act(() => {
+      jest.advanceTimersByTime(500);
+    });
+
+    expect(result.current[0]).toBeGreaterThan(0);
+
+    act(() => {
+      result.current[2]();
+    });
+
+    expect(result.current[0]).toBe(0);
+  });
+
   test('should clear interval when unmounted', () => {
     const mockCallback = jest.fn();
     const { result, unmount } = renderHook(() =>

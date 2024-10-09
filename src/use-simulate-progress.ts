@@ -5,7 +5,7 @@ type func = (...args: any[]) => void;
 export const useSimulateProgress = (
   duration: number,
   onComplete: func,
-): [number, func] => {
+): [number, func, func] => {
   const [progress, setProgress] = useState(0);
   const intervalRef = useRef<any>(null);
 
@@ -25,6 +25,14 @@ export const useSimulateProgress = (
     }, duration / 20);
   };
 
+  const resetProgress = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    setProgress(0);
+  };
+
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
@@ -33,7 +41,7 @@ export const useSimulateProgress = (
     };
   }, []);
 
-  return [progress, startProgress];
+  return [progress, startProgress, resetProgress];
 };
 
 export default useSimulateProgress;
