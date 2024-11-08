@@ -24,8 +24,14 @@
   "module": "./dist/hooks.js",
   "exports": {
     ".": {
-      "import": "./dist/hooks.js",
-      "require": "./dist/hooks.umd.cjs"
+      "import": {
+        "types": "./types/hooks.d.ts",
+        "default": "./dist/hooks.js"
+      },
+      "require": {
+        "types": "./types/hooks.d.ts",
+        "default": "./dist/hooks.umd.cjs"
+      }
     }
   },
   "scripts": {
