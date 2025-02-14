@@ -39,6 +39,7 @@ import { useRequest } from '@mints/hooks';
 - [useToggle](./docs/use-toggle.md)
 - [useLocalStorage](./docs/use-localstorage.md)
 - [useSimulateProgress](./docs/use-simulate-progress.md)
+- [useQueryParams](./docs/use-query-params.md)
 
 ## 🌐 LICENSE
 
