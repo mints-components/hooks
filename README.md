@@ -41,6 +41,7 @@ import { useRequest } from '@mints/hooks';
 - [useSimulateProgress](./docs/use-simulate-progress.md)
 - [useQueryParams](./docs/use-query-params.md)
 - [useUrlState](./docs/use-url-state.md)
+- [useHotKeys](./docs//use-hot-keys.md)
 
 ## 🌐 LICENSE
 
