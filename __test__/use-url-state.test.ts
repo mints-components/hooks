@@ -2,19 +2,11 @@ import { act, renderHook } from '@testing-library/react';
 
 import { useUrlState } from '../src';
 
-// Mock window.location and history
-const originalLocation = window.location;
+// Mock history.pushState for assertion
 const originalPushState = window.history.pushState;
 
 function setLocation(search: string) {
-  Object.defineProperty(window, 'location', {
-    configurable: true,
-    value: {
-      ...originalLocation,
-      pathname: '/test',
-      search,
-    },
-  });
+  window.history.replaceState({}, '', `/test${search}`);
 }
 
 beforeEach(() => {
@@ -23,10 +15,6 @@ beforeEach(() => {
 });
 
 afterAll(() => {
-  Object.defineProperty(window, 'location', {
-    configurable: true,
-    value: originalLocation,
-  });
   window.history.pushState = originalPushState;
 });
 
