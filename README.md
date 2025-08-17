@@ -32,7 +32,6 @@ import { useRequest } from '@mints/hooks';
 
 ## 📃 Hook List
 
-- [useRequest](./docs/use-request.md)
 - [useAutoRefresh](./docs/use-auto-refresh.md)
 - [useOutsideClick](./docs/use-outside-click.md)
 - [useDebounce](./docs/use-debounce.md)
