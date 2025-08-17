@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
-    "types": ["jest", "node"],
+    "types": ["vitest", "node", "jsdom"],
     "noEmit": true,
     "esModuleInterop": true
   },

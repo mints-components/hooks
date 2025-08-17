@@ -1,17 +1,24 @@
 import { renderHook, act } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 
 import { useDebounce } from '.';
 
-jest.useFakeTimers();
+vi.useFakeTimers();
+
+let state = 0;
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  vi.clearAllTimers();
+  state = 0;
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe('useDebounce', () => {
-  let state = 0;
-
-  afterEach(() => {
-    state = 0;
-  });
-
-  it('should not change when the time has not arrived', async () => {
+  it('should not change when the time has not arrived', () => {
     const { result, rerender } = renderHook(() => useDebounce(state));
     expect(result.current).toBe(0);
 
@@ -19,14 +26,14 @@ describe('useDebounce', () => {
     rerender();
     expect(result.current).toBe(0);
 
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
 
     state = 2;
     rerender();
     expect(result.current).toBe(0);
   });
 
-  it('should change when the time has arrived', async () => {
+  it('should change when the time has arrived', () => {
     const { result, rerender } = renderHook(() => useDebounce(state));
     expect(result.current).toBe(0);
 
@@ -34,9 +41,10 @@ describe('useDebounce', () => {
     rerender();
     expect(result.current).toBe(0);
 
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
+    act(() => {
+      vi.advanceTimersByTime(1000);
     });
+
     expect(result.current).toBe(1);
   });
 });

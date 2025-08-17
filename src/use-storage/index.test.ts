@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
+import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { useLocalStorage, useSessionStorage, useStorage } from '.';
 
@@ -11,11 +12,11 @@ describe('useStorage / useLocalStorage / useSessionStorage', () => {
       window.localStorage?.clear?.();
       window.sessionStorage?.clear?.();
     } catch {}
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
-    // jest.setup.ts already restores, but keep this for belt-and-suspenders.
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   test('useLocalStorage: initialize with value from localStorage', () => {
@@ -40,9 +41,9 @@ describe('useStorage / useLocalStorage / useSessionStorage', () => {
 
   test('useLocalStorage: falls back to default if localStorage unavailable', () => {
     // Simulate getter throwing
-    jest
-      .spyOn(window, 'localStorage', 'get')
-      .mockReturnValue(undefined as unknown as Storage);
+    vi.spyOn(window, 'localStorage', 'get').mockReturnValue(
+      undefined as unknown as Storage,
+    );
 
     const { result } = renderHook(() => useLocalStorage(KEY, 'default'));
     expect(result.current[0]).toBe('default');

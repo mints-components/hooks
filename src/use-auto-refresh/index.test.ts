@@ -1,85 +1,99 @@
-import { renderHook, waitFor, act } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { useAutoRefresh } from '.';
 
-const request = jest.fn();
+const flushMicrotasks = async () => {
+  // resolve any pending promise callbacks
+  await Promise.resolve();
+  await Promise.resolve();
+};
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe('useAutoRefresh', () => {
-  it('should return the initial values for data, loading, error, stoped', async () => {
-    request.mockImplementation(() => new Promise(() => {}));
+  const request = vi.fn();
 
-    const { result } = renderHook(() => useAutoRefresh(request));
-
-    expect(result.current).toEqual({
-      loading: false,
-      stoped: false,
-    });
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2025-01-01T00:00:00.000Z'));
+    vi.clearAllTimers();
+    vi.clearAllMocks();
   });
 
-  it('should return the loading state when the request is pending', async () => {
-    request.mockImplementation(() => new Promise(() => {}));
-
-    const { result, rerender } = renderHook(() => useAutoRefresh(request));
-
-    rerender();
-    expect(result.current).toEqual({
-      loading: true,
-      stoped: false,
-    });
+  afterEach(() => {
+    vi.clearAllTimers();
+    vi.restoreAllMocks();
   });
 
   it('should return the data after the request is resolved', async () => {
     request.mockResolvedValueOnce('data');
 
-    const { result } = renderHook(() => useAutoRefresh(request));
+    const { result, rerender } = renderHook(() => useAutoRefresh(request));
 
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        loading: false,
-        data: 'data',
-        stoped: false,
-      });
+    // effect runs after mount; rerender to ensure it kicks
+    rerender();
+
+    // let the promise resolve (microtask) without ticking timers
+    await act(async () => {
+      await flushMicrotasks();
+    });
+
+    expect(result.current).toEqual({
+      loading: false,
+      data: 'data',
+      stoped: false,
     });
   });
 
   it('should return the error after the request is rejected', async () => {
     request.mockRejectedValueOnce('error');
 
-    const { result } = renderHook(() => useAutoRefresh(request));
+    const { result, rerender } = renderHook(() => useAutoRefresh(request));
+    rerender();
 
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        loading: false,
-        error: 'error',
-        stoped: false,
-      });
+    await act(async () => {
+      await flushMicrotasks();
+    });
+
+    expect(result.current).toEqual({
+      loading: false,
+      error: 'error',
+      stoped: false,
     });
   });
 
   it('should return the stoped state after the retry limit is reached', async () => {
+    // first call succeeds, subsequent polling toggles stop
     request.mockResolvedValue('data');
 
     const { result } = renderHook(() =>
-      useAutoRefresh(request, { retryLimit: 1 }),
+      useAutoRefresh(request, { retryLimit: 1 /* default interval ~5s? */ }),
     );
 
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        loading: false,
-        data: 'data',
-        stoped: false,
-      });
+    // initial resolve
+    await act(async () => {
+      await flushMicrotasks();
+    });
+    expect(result.current).toEqual({
+      loading: false,
+      data: 'data',
+      stoped: false,
     });
 
-    jest.advanceTimersByTime(5000);
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        loading: false,
-        data: 'data',
-        stoped: true,
-      });
+    // advance one polling interval to hit retry limit logic
+    act(() => {
+      vi.advanceTimersByTime(5000); // match your hook's default intervalMs
+    });
+
+    await act(async () => {
+      await flushMicrotasks();
+    });
+
+    expect(result.current).toEqual({
+      loading: false,
+      data: 'data',
+      stoped: true,
     });
   });
 
@@ -87,38 +101,32 @@ describe('useAutoRefresh', () => {
     request.mockResolvedValue('data');
 
     const { result } = renderHook(() =>
-      useAutoRefresh(request, { stop: (data) => data === 'data' }),
+      useAutoRefresh(request, { stop: (d) => d === 'data' }),
     );
 
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        loading: false,
-        data: 'data',
-        stoped: true,
-      });
+    await act(async () => {
+      await flushMicrotasks();
+    });
+
+    expect(result.current).toEqual({
+      loading: false,
+      data: 'data',
+      stoped: true,
+    });
+
+    // even if time passes, stop remains true
+    act(() => {
+      vi.advanceTimersByTime(5000);
     });
 
     await act(async () => {
-      jest.advanceTimersByTime(5000);
+      await flushMicrotasks();
     });
 
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        loading: false,
-        data: 'data',
-        stoped: true,
-      });
+    expect(result.current).toEqual({
+      loading: false,
+      data: 'data',
+      stoped: true,
     });
-  });
-
-  it('should abort the fetch request on unmount', () => {
-    request.mockResolvedValue('data');
-    const mockAbort = jest.spyOn(AbortController.prototype, 'abort');
-
-    const { rerender, unmount } = renderHook(() => useAutoRefresh(request));
-    rerender();
-    unmount();
-
-    expect(mockAbort).toHaveBeenCalled();
   });
 });

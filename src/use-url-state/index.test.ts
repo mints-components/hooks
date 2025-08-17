@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 
 import { useUrlState } from '.';
 
@@ -11,10 +12,11 @@ function setLocation(search: string) {
 
 beforeEach(() => {
   setLocation('');
-  window.history.pushState = jest.fn();
+  vi.spyOn(window.history, 'pushState');
 });
 
 afterAll(() => {
+  vi.restoreAllMocks();
   window.history.pushState = originalPushState;
 });
 

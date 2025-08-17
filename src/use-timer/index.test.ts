@@ -1,18 +1,19 @@
 import { act, renderHook } from '@testing-library/react';
+import { describe, it, vi, expect, beforeEach } from 'vitest';
 
 import { useTimer, createLocalStorageAdapter } from '.';
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe('useTimer (countdown)', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2025-01-01T00:00:00.000Z'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2025-01-01T00:00:00.000Z'));
     localStorage.clear();
   });
 
   it('counts down and calls onEnd once', () => {
-    const onEnd = jest.fn();
+    const onEnd = vi.fn();
     const { result } = renderHook(() =>
       useTimer({ mode: 'countdown', durationMs: 3000, onEnd }),
     );
@@ -25,13 +26,13 @@ describe('useTimer (countdown)', () => {
     expect(result.current.running).toBe(true);
 
     act(() => {
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
     expect(result.current.valueMs).toBeGreaterThan(1000);
     expect(result.current.valueMs).toBeLessThanOrEqual(2000);
 
     act(() => {
-      jest.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(2000);
     });
     expect(result.current.valueMs).toBe(0);
     expect(result.current.running).toBe(false);
@@ -39,7 +40,7 @@ describe('useTimer (countdown)', () => {
     expect(onEnd).toHaveBeenCalledTimes(1);
 
     act(() => {
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
     expect(onEnd).toHaveBeenCalledTimes(1);
   });
@@ -51,7 +52,7 @@ describe('useTimer (countdown)', () => {
 
     act(() => result.current.start());
     act(() => {
-      jest.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(2000);
     });
     const after2s = result.current.valueMs;
     expect(after2s).toBeGreaterThanOrEqual(2900);
@@ -59,7 +60,7 @@ describe('useTimer (countdown)', () => {
 
     act(() => result.current.pause());
     act(() => {
-      jest.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(2000);
     });
     expect(result.current.valueMs).toBe(after2s); // frozen
 
@@ -79,7 +80,7 @@ describe('useTimer (countdown)', () => {
 
     act(() => result.current.start());
     act(() => {
-      jest.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(2000);
     });
 
     const leftBefore = result.current.valueMs;
@@ -88,7 +89,7 @@ describe('useTimer (countdown)', () => {
 
     unmount();
     act(() => {
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
 
     const { result: result2 } = renderHook(() =>
@@ -104,7 +105,7 @@ describe('useTimer (countdown)', () => {
     expect(result2.current.valueMs).toBeGreaterThanOrEqual(1500);
 
     act(() => {
-      jest.advanceTimersByTime(2500);
+      vi.advanceTimersByTime(2500);
     });
     expect(result2.current.valueMs).toBe(0);
     expect(result2.current.running).toBe(false);
@@ -113,13 +114,13 @@ describe('useTimer (countdown)', () => {
 
 describe('useTimer (countup)', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2025-01-01T00:00:00.000Z'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2025-01-01T00:00:00.000Z'));
     localStorage.clear();
   });
 
   it('counts up from 0 and respects stopAtDuration', () => {
-    const onEnd = jest.fn();
+    const onEnd = vi.fn();
     const { result } = renderHook(() =>
       useTimer({
         mode: 'countup',
@@ -134,13 +135,13 @@ describe('useTimer (countup)', () => {
     expect(result.current.valueMs).toBe(0);
 
     act(() => {
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
     expect(result.current.valueMs).toBeGreaterThanOrEqual(900);
     expect(result.current.progress).toBeGreaterThan(0);
 
     act(() => {
-      jest.advanceTimersByTime(2500);
+      vi.advanceTimersByTime(2500);
     });
     expect(result.current.valueMs).toBe(3000);
     expect(result.current.running).toBe(false);

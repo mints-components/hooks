@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 import { useOutsideClick } from '.';
 
@@ -6,9 +7,10 @@ describe('useOutsideClick', () => {
   let state = 0;
   let container: HTMLDivElement;
   let outOfContainer: HTMLDivElement;
-  let onClick = () => state++;
+  const onClick = () => state++;
 
   beforeEach(() => {
+    state = 0;
     container = document.createElement('div');
     outOfContainer = document.createElement('div');
     document.body.appendChild(container);
@@ -16,7 +18,6 @@ describe('useOutsideClick', () => {
   });
 
   afterEach(() => {
-    state = 0;
     document.body.removeChild(container);
     document.body.removeChild(outOfContainer);
   });

@@ -1,18 +1,24 @@
 import { act, renderHook } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { useCountdown } from './use-countdown';
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe('useCountdown', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2025-01-01T00:00:00.000Z'));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2025-01-01T00:00:00.000Z'));
     localStorage.clear();
   });
 
+  afterEach(() => {
+    vi.clearAllTimers();
+    vi.restoreAllMocks();
+  });
+
   it('counts down to zero and calls onEnd once', () => {
-    const onEnd = jest.fn();
+    const onEnd = vi.fn();
     const { result } = renderHook(() => useCountdown({ seconds: 3, onEnd }));
 
     // initial state
@@ -26,19 +32,19 @@ describe('useCountdown', () => {
 
     // t +1s
     act(() => {
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
     expect(result.current.secondsLeft).toBe(2);
 
     // t +2s
     act(() => {
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
     expect(result.current.secondsLeft).toBe(1);
 
     // t +3s -> end
     act(() => {
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
     expect(result.current.secondsLeft).toBe(0);
     expect(result.current.running).toBe(false);
@@ -46,7 +52,7 @@ describe('useCountdown', () => {
 
     // keep ticking should not call onEnd again
     act(() => {
-      jest.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(2000);
     });
     expect(onEnd).toHaveBeenCalledTimes(1);
   });
@@ -59,7 +65,7 @@ describe('useCountdown', () => {
     expect(result.current.secondsLeft).toBe(10);
 
     act(() => {
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
     expect(result.current.secondsLeft).toBe(9);
   });
@@ -69,7 +75,7 @@ describe('useCountdown', () => {
 
     act(() => result.current.start());
     act(() => {
-      jest.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(2000);
     });
     const frozen = result.current.secondsLeft;
     expect(frozen).toBe(2);
@@ -78,7 +84,7 @@ describe('useCountdown', () => {
     expect(result.current.running).toBe(false);
 
     act(() => {
-      jest.advanceTimersByTime(3000);
+      vi.advanceTimersByTime(3000);
     });
     expect(result.current.secondsLeft).toBe(frozen); // unchanged
   });
@@ -88,7 +94,7 @@ describe('useCountdown', () => {
 
     act(() => result.current.start());
     act(() => {
-      jest.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(2000);
     });
     expect(result.current.secondsLeft).toBe(3);
 
@@ -110,14 +116,14 @@ describe('useCountdown', () => {
 
     act(() => result.current.start()); // endAt = now + 5s
     act(() => {
-      jest.advanceTimersByTime(2000);
+      vi.advanceTimersByTime(2000);
     }); // ~3s left
     expect(result.current.secondsLeft).toBe(3);
 
     // simulate refresh: unmount, time passes 1s, mount again
     unmount();
     act(() => {
-      jest.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     }); // ~2s left at mount time
 
     const { result: result2 } = renderHook(() =>
@@ -128,7 +134,7 @@ describe('useCountdown', () => {
     expect([2, 1]).toContain(result2.current.secondsLeft);
 
     act(() => {
-      jest.advanceTimersByTime(2500);
+      vi.advanceTimersByTime(2500);
     });
     expect(result2.current.secondsLeft).toBe(0);
     expect(result2.current.running).toBe(false);
@@ -142,7 +148,7 @@ describe('useCountdown', () => {
     expect([3, 2]).toContain(result.current.secondsLeft); // first tick alignment
 
     act(() => {
-      jest.advanceTimersByTime(3000);
+      vi.advanceTimersByTime(3000);
     });
     expect(result.current.secondsLeft).toBe(0);
     expect(result.current.running).toBe(false);
@@ -179,7 +185,7 @@ describe('useCountdown', () => {
     expect([5, 4]).toContain(result.current.secondsLeft);
 
     act(() => {
-      jest.advanceTimersByTime(5000);
+      vi.advanceTimersByTime(5000);
     });
     expect(result.current.secondsLeft).toBe(0);
     expect(result.current.running).toBe(false);

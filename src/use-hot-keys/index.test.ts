@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 import { useHotkeys } from '.';
 

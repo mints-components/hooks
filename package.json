@@ -1,13 +1,13 @@
 {
   "name": "@mints/hooks",
   "version": "1.0.0",
+  "description": "An easy-to-use React hooks collections.",
   "keywords": [
     "react",
     "hooks",
     "mints",
     "mints-components"
   ],
-  "description": "An easy-to-use React hooks collections.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mints-components/hooks.git"
@@ -20,28 +20,25 @@
     "types"
   ],
   "types": "./types/hooks.d.ts",
-  "main": "./dist/hooks.umd.cjs",
+  "main": "./dist/hooks.cjs",
   "module": "./dist/hooks.js",
   "exports": {
     ".": {
-      "import": {
-        "types": "./types/hooks.d.ts",
-        "default": "./dist/hooks.js"
-      },
-      "require": {
-        "types": "./types/hooks.d.ts",
-        "default": "./dist/hooks.umd.cjs"
-      }
+      "types": "./types/hooks.d.ts",
+      "import": "./dist/hooks.js",
+      "require": "./dist/hooks.cjs"
     }
   },
   "scripts": {
-    "clean": "rm -rf dist && rm -rf types && rm -rf coverage",
-    "build": "yarn clean && tsc -b && yarn test && vite build",
+    "clean": "rm -rf dist types coverage .turbo node_modules/.tmp || true",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "prettier": "prettier --write .",
-    "test": "jest",
+    "build": "yarn clean && tsc -b && vitest run && vite build",
     "prepare": "husky",
-    "prepublish": "yarn test && yarn build"
+    "prepublishOnly": "yarn build"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -52,35 +49,32 @@
       "prettier --write"
     ]
   },
-  "dependencies": {
-    "lodash": "^4.17.21",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+  "peerDependencies": {
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@mints/eslint-config": "^1.0.2",
     "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
-    "@types/jest": "^29.5.12",
-    "@types/lodash": "^4",
+    "@types/jsdom": "^21.1.7",
     "@types/node": "^22.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-v8": "^2.0.5",
     "eslint": "^8.57.0",
     "husky": "^9.1.5",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^26.1.0",
     "lint-staged": "^15.2.10",
     "pinst": "^3.0.0",
     "prettier": "^3.3.3",
-    "ts-jest": "^29.2.5",
+    "react": "^18",
+    "react-dom": "^18",
     "typescript": "^5.2.2",
     "vite": "^5.3.4",
-    "vite-plugin-dts": "^4.1.0"
-  },
-  "peerDependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "vite-plugin-dts": "^4.1.0",
+    "vitest": "^2.0.5"
   }
 }
