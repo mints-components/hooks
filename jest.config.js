@@ -5,10 +5,11 @@ export default {
     '^.+.tsx?$': [
       'ts-jest',
       {
-        diagnostics: {
-          ignoreCodes: [151001],
-        },
+        useESM: true,
+        tsconfig: './tsconfig.test.json',
       },
     ],
   },
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 };
