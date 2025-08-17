@@ -13,7 +13,7 @@
     "url": "git+https://github.com/mints-components/hooks.git"
   },
   "license": "MIT",
-  "packageManager": "yarn@4.5.0",
+  "packageManager": "yarn@4.9.2",
   "type": "module",
   "files": [
     "dist",
