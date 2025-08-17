@@ -35,8 +35,8 @@ import { useAutoRefresh } from '@mints/hooks';
 - [useAutoRefresh](./src/use-auto-refresh/README.md)
 - [useDebounce](./src/use-debounce/README.md)
 - [useHotKeys](./src//use-hot-keys/README.md)
-- [useLocalStorage](./src/use-localstorage/README.md)
 - [useOutsideClick](./src/use-outside-click/README.md)
+- [useStorage](./src/use-storage/README.md)
 - [useToggle](./src/use-toggle/README.md)
 - [useUrlState](./src/use-url-state/README.md)
 
