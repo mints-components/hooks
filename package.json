@@ -41,7 +41,7 @@
     "prettier": "prettier --write .",
     "test": "jest",
     "prepare": "husky",
-    "prepublish": "yarn build"
+    "prepublish": "yarn test && yarn build"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
