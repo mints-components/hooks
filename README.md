@@ -27,18 +27,18 @@ $ npm install @mints/hooks
 ## ⚙️ Usage
 
 ```javascript
-import { useRequest } from '@mints/hooks';
+import { useAutoRefresh } from '@mints/hooks';
 ```
 
 ## 📃 Hook List
 
-- [useAutoRefresh](./docs/use-auto-refresh.md)
-- [useOutsideClick](./docs/use-outside-click.md)
-- [useDebounce](./docs/use-debounce.md)
-- [useToggle](./docs/use-toggle.md)
-- [useLocalStorage](./docs/use-localstorage.md)
-- [useUrlState](./docs/use-url-state.md)
-- [useHotKeys](./docs//use-hot-keys.md)
+- [useAutoRefresh](./src/use-auto-refresh/README.md)
+- [useDebounce](./src/use-debounce/README.md)
+- [useHotKeys](./src//use-hot-keys/README.md)
+- [useLocalStorage](./src/use-localstorage/README.md)
+- [useOutsideClick](./src/use-outside-click/README.md)
+- [useToggle](./src/use-toggle/README.md)
+- [useUrlState](./src/use-url-state/README.md)
 
 ## 🌐 LICENSE
 

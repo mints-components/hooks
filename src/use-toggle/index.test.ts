@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 
-import { useToggle } from '../src';
+import { useToggle } from '.';
 
 describe('useToggle', () => {
   it('should return the default state', () => {

@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 
-import { useHotkeys } from '../src';
+import { useHotkeys } from '.';
 
 describe('useHotkeys', () => {
   let calls: string[] = [];
@@ -33,7 +33,7 @@ describe('useHotkeys', () => {
 
   it('should trigger callback for multiple keys with shared handler', () => {
     renderHook(() =>
-      useHotkeys(['enter', 'k'], (e, key) => {
+      useHotkeys(['enter', 'k'], (_, key) => {
         calls.push(`shared:${key}`);
       }),
     );

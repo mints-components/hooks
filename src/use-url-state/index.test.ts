@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 
-import { useUrlState } from '../src';
+import { useUrlState } from '.';
 
 // Mock history.pushState for assertion
 const originalPushState = window.history.pushState;

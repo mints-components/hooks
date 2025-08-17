@@ -1,6 +1,6 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
 
-import { useAutoRefresh } from '../src';
+import { useAutoRefresh } from '.';
 
 const request = jest.fn();
 

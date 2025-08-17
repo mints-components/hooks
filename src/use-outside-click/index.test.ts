@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 
-import { useOutsideClick } from '../src';
+import { useOutsideClick } from '.';
 
 describe('useOutsideClick', () => {
   let state = 0;
