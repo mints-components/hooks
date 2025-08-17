@@ -2,7 +2,8 @@
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
     "types": ["jest", "node"],
-    "noEmit": true
+    "noEmit": true,
+    "esModuleInterop": true
   },
   "include": ["__test__", "src"]
 }
