@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 import pkg from './package.json';
 
@@ -14,6 +15,7 @@ export default defineConfig({
       outDir: 'types',
       rollupTypes: true,
     }),
+    visualizer(),
   ],
   build: {
     lib: {
@@ -27,7 +29,10 @@ export default defineConfig({
       },
     },
     rollupOptions: {
-      external: [...Object.keys(pkg.peerDependencies || {})],
+      external: [
+        ...Object.keys(pkg.peerDependencies || {}),
+        ...Object.keys(pkg.dependencies || {}),
+      ],
     },
   },
 });

@@ -17,7 +17,8 @@
   "type": "module",
   "files": [
     "dist",
-    "types"
+    "types",
+    "CHANGELOG.md"
   ],
   "types": "./types/hooks.d.ts",
   "main": "./dist/hooks.cjs",
@@ -37,8 +38,11 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "prettier": "prettier --write .",
     "build": "yarn clean && tsc -b && vitest run && vite build",
-    "prepare": "husky",
-    "prepublishOnly": "yarn build"
+    "prepublish": "yarn build",
+    "publish": "yarn npm publish --access public",
+    "postinstall": "husky install",
+    "prepack": "pinst --disable",
+    "postpack": "pinst --enable"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -53,12 +57,16 @@
     "react": "^18",
     "react-dom": "^18"
   },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
   "devDependencies": {
     "@mints/eslint-config": "^1.0.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
     "@types/jsdom": "^21.1.7",
+    "@types/lodash": "^4.17.20",
     "@types/node": "^22.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -72,6 +80,7 @@
     "prettier": "^3.3.3",
     "react": "^18",
     "react-dom": "^18",
+    "rollup-plugin-visualizer": "^6.0.3",
     "typescript": "^5.2.2",
     "vite": "^5.3.4",
     "vite-plugin-dts": "^4.1.0",
